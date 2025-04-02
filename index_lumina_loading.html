@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LÚMINA - Tu reflejo diario impulsado por inteligencia artificial. Recibe mensajes únicos que te guían emocionalmente cada día." />
+  <meta name="author" content="LÚMINA" />
+  <meta name="theme-color" content="#6B6BAF" />
+  <title>LÚMINA - Tu Reflejo Diario</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/891/891175.png" />
+  <style>
+    body {
+      background-color: #EAE6F5;
+      font-family: 'Segoe UI', sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background-color: #6B6BAF;
+      color: white;
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+    }
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .input-group select, .input-group input {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .message-box {
+      background-color: #fff;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin-top: 1.5rem;
+      white-space: pre-wrap;
+    }
+    button {
+      background-color: #6B6BAF;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LÚMINA</h1>
+    <p>Tu reflejo diario con inteligencia emocional</p>
+  </header>
+  <main>
+    <form id="mirrorForm">
+      <div class="input-group">
+        <label for="name">¿Cómo te llamas?</label>
+        <input type="text" id="name" required />
+      </div>
+      <div class="input-group">
+        <label for="mood">¿Cómo te sientes hoy?</label>
+        <select id="mood">
+          <option value="tranquilo">Tranquilo</option>
+          <option value="ansioso">Ansioso</option>
+          <option value="feliz">Feliz</option>
+          <option value="triste">Triste</option>
+          <option value="enfocado">Enfocado</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="tone">Elige el estilo del mensaje</label>
+        <select id="tone">
+          <option value="motivador">Motivador</option>
+          <option value="espiritual">Espiritual</option>
+          <option value="poetico">Poético</option>
+          <option value="sabio">Sabio</option>
+        </select>
+      </div>
+      <button type="submit">Recibir mi mensaje</button>
+    </form>
+    <div id="message" class="message-box" style="display:none;"></div>
+  </main>
+
+  <footer>
+    © 2025 LÚMINA. Todos los derechos reservados.
+  </footer>
+
+  <script>
+    const form = document.getElementById('mirrorForm');
+    const messageBox = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const mood = document.getElementById('mood').value;
+      const tone = document.getElementById('tone').value;
+
+      const prompt = `Actúa como un espejo digital personalizado para ${name}, con un tono ${tone}. Hoy se siente ${mood}. Escribe un mensaje reflexivo, emocionalmente útil, entre 80 y 120 palabras. Incluye una observación emocional, un consejo y una frase final memorable.`;
+
+      messageBox.style.display = 'block';
+      messageBox.textContent = '✨ Generando tu reflejo diario…';
+
+      try {
+        const response = await fetch('https://lumina-production.up.railway.app/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await response.json();
+        messageBox.textContent = data.message || '⚠️ No se recibió un mensaje.';
+      } catch (error) {
+        messageBox.textContent = '❌ Hubo un error al generar tu mensaje. Intenta nuevamente.';
+      }
+    });
+  </script>
+</body>
+</html>
